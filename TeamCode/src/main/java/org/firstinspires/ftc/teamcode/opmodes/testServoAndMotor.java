@@ -66,7 +66,7 @@ public class testServoAndMotor extends OpMode {
             }
         }
 
-        telemetry.addData("Motor Direction", motor1.getDirection());
+        telemetry.addData("Motor Direction", motor1.getDirection());                
         telemetry.addData("Servo Power", servo1.getDirection());
         telemetry.update();
     }
