@@ -8,6 +8,17 @@
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
 
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://repo.dairy.foundation/releases"
+        }
+    }
+    dependencies {
+        classpath "dev.frozenmilk:Load:0.2.4"
+    }
+}
 
 // Custom definitions may go here
 
@@ -37,6 +48,7 @@ android {
     }
 }
 
+
 repositories {
     maven {
         url = 'https://maven.brott.dev/'
@@ -50,7 +62,14 @@ repositories {
     }
 }
 
+repositories {
+    maven {
+        url = "https://repo.dairy.foundation/releases"
+    }
+}
+
 dependencies {
+    implementation("dev.frozenmilk.sinister:Sloth:0.2.4")
     implementation project(':FtcRobotController')
     implementation 'org.openftc:easyopencv:1.7.3'
     implementation 'dev.nextftc:ftc:1.0.0'
