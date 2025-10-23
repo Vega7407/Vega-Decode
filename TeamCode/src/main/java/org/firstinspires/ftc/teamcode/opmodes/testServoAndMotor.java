@@ -17,7 +17,7 @@ public class testServoAndMotor extends OpMode {
     ServoImplEx servo1;
     boolean motorOn;
     boolean servoOn;
-    boolean servoDirecion;
+    boolean servoDirection;
 
     @Override
     public void init() {
@@ -25,7 +25,7 @@ public class testServoAndMotor extends OpMode {
         servo1 = hardwareMap.get(ServoImplEx.class, "servo1");
         motorOn = false;
         servoOn = false;
-        servoDirecion = false;
+        servoDirection = false;
     }
 
     @Override
@@ -33,21 +33,19 @@ public class testServoAndMotor extends OpMode {
         if (gamepad1.a) {
             if (motorOn) {
                 motor1.setPower(0);
-                motorOn = !motorOn;
             } else {
                 motor1.setPower(1);
-                motorOn = !motorOn;
             }
+            motorOn = !motorOn;
         }
 
         if (gamepad1.b) {
             if (servoOn) {
                 servo1.setPosition(0);
-                servoOn = !servoOn;
             } else {
                 servo1.setPosition(1);
-                servoOn = !servoOn;
             }
+            servoOn = !servoOn;
         }
 
         if (gamepad1.x) {

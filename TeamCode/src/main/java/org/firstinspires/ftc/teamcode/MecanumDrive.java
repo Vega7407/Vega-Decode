@@ -271,6 +271,13 @@ public final class MecanumDrive extends NextFTCMecanumDrive {
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
     }
 
+    public void setRawWheelPowers(double lf, double lb, double rb, double rf) {
+        leftFront.setPower(lf);
+        leftBack.setPower(lb);
+        rightBack.setPower(rb);
+        rightFront.setPower(rf);
+    }
+
     public final class FollowTrajectoryAction implements Action {
         public final TimeTrajectory timeTrajectory;
         private double beginTs = -1;
