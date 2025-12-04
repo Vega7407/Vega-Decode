@@ -33,21 +33,19 @@ public class testServoAndMotor extends OpMode {
         if (gamepad1.a) {
             if (motorOn) {
                 motor1.setPower(0);
-                motorOn = !motorOn;
             } else {
                 motor1.setPower(1);
-                motorOn = !motorOn;
             }
+            motorOn = !motorOn;
         }
 
         if (gamepad1.b) {
             if (servoOn) {
                 servo1.setPosition(0);
-                servoOn = !servoOn;
             } else {
                 servo1.setPosition(1);
-                servoOn = !servoOn;
             }
+            servoOn = !servoOn;
         }
 
         if (gamepad1.x) {
