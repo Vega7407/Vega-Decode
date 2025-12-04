@@ -17,7 +17,7 @@ public class testServoAndMotor extends OpMode {
     ServoImplEx servo1;
     boolean motorOn;
     boolean servoOn;
-    boolean servoDirecion;
+    boolean servoDirection;
 
     @Override
     public void init() {
@@ -25,7 +25,7 @@ public class testServoAndMotor extends OpMode {
         servo1 = hardwareMap.get(ServoImplEx.class, "servo1");
         motorOn = false;
         servoOn = false;
-        servoDirecion = false;
+        servoDirection = false;
     }
 
     @Override
@@ -66,7 +66,8 @@ public class testServoAndMotor extends OpMode {
             }
         }
 
-        telemetry.addData("Motor Direction", motor1.getDirection());                
+        telemetry.addData("Motor Direction", motor1.getDirection());
+        telemetry.addData("Motor Velocity", motor1.getVelocity());
         telemetry.addData("Servo Power", servo1.getDirection());
         telemetry.update();
     }

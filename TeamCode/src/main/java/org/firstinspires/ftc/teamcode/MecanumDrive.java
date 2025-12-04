@@ -243,6 +243,8 @@ public final class MecanumDrive extends NextFTCMecanumDrive {
 
         // TODO: reverse motor directions if needed
         //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
@@ -269,6 +271,13 @@ public final class MecanumDrive extends NextFTCMecanumDrive {
         leftBack.setPower(wheelVels.leftBack.get(0) / maxPowerMag);
         rightBack.setPower(wheelVels.rightBack.get(0) / maxPowerMag);
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
+    }
+
+    public void setRawWheelPowers(double lf, double lb, double rb, double rf) {
+        leftFront.setPower(lf);
+        leftBack.setPower(lb);
+        rightBack.setPower(rb);
+        rightFront.setPower(rf);
     }
 
     public final class FollowTrajectoryAction implements Action {
@@ -457,14 +466,14 @@ public final class MecanumDrive extends NextFTCMecanumDrive {
     public PoseVelocity2d updatePoseEstimate() {
         PoseVelocity2d vel = localizer.update();
         poseHistory.add(localizer.getPose());
-        
+
         while (poseHistory.size() > 100) {
             poseHistory.removeFirst();
         }
 
         estimatedPoseWriter.write(new PoseMessage(localizer.getPose()));
-        
-        
+
+
         return vel;
     }
 
