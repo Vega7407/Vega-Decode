@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -18,7 +17,6 @@ public class OutreachTeleOp extends OpMode {
     DcMotorImplEx intakeMotor;
     DcMotorImplEx outtakeMotor;
     ServoImplEx servo1;
-    PIDFController motorPID;
     double motorPower;
     boolean servoOn;
     boolean servoDirection;
@@ -34,7 +32,6 @@ public class OutreachTeleOp extends OpMode {
         outtakeMotor = hardwareMap.get(DcMotorImplEx.class, "outtakeMotor");
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         servo1 = hardwareMap.get(ServoImplEx.class, "servo1");
-        motorPID = new PIDFController(p, i, d, f);
         servoOn = false;
         output = 0;
         motorVelocity = 1400;

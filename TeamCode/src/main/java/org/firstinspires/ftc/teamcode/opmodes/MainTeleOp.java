@@ -6,8 +6,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.arcrobotics.ftclib.controller.PIDFController;
-import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -37,7 +35,6 @@ public class MainTeleOp extends OpMode {
     DcMotorImplEx outtakeMotor;
     MotorEx outtakeMotorEx;
     ServoImplEx servo1;
-    PIDFController motorPID;
     ControlSystem controller;
     double motorPower;
     boolean servoOn;
@@ -55,7 +52,6 @@ public class MainTeleOp extends OpMode {
         outtakeMotorEx = new MotorEx(outtakeMotor);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         servo1 = hardwareMap.get(ServoImplEx.class, "servo1");
-        motorPID = new PIDFController(pidCoefficients.kP, pidCoefficients.kI, pidCoefficients.kD, 0.0);
         servoOn = false;
         output = 0;
 
@@ -67,31 +63,30 @@ public class MainTeleOp extends OpMode {
                 .velPid(pidCoefficients)
                 .basicFF(kV)
                 .build();
+
     }
 
     @Override
     public void loop() {
-        double output = motorPID.calculate(
-                outtakeMotor.getVelocity(), 1200
-        );
 
         if (gamepad1.right_trigger > 0.1) {
-            outtakeMotor.setPower(1);
+            outtakeMotor.setPower(motorPower);
         } else {
             outtakeMotor.setPower(0);
         }
 
         if(gamepad1.aWasReleased())
         {
-            if (motorPower <=.82) {
-                motorPower+=.05;
+            if (motorPower <=.99) {
+                motorPower+=.01;
             }
         }
+
         if (gamepad1.y) {
             if (servoOn) {
-                controller.setGoal(new KineticState(0.0, 1100.0, 0.0));
+                servo1.setPosition(1);
             } else {
-                outtakeMotor.setVelocity(0);
+                servo1.setPosition(0);
             }
             servoOn = !servoOn;
         }
@@ -99,7 +94,7 @@ public class MainTeleOp extends OpMode {
         if(gamepad1.bWasReleased())
         {
             if (outtakeMotor.getPower()>=.1) {
-                motorPower-=.05;
+                motorPower-=.01;
             }
         }
 
@@ -126,7 +121,7 @@ public class MainTeleOp extends OpMode {
         drive.setDrivePowers(new PoseVelocity2d(new Vector2d(y, x), rx));
         drive.updatePoseEstimate();
 
-        outtakeMotorEx.setPower(controller.calculate(outtakeMotorEx.getState()));
+//        outtakeMotorEx.setPower(controller.calculate(outtakeMotorEx.getState()));
 
         telemetry.addData("X Position", drive.getPose().position.x);
         telemetry.addData("Y Position", drive.getPose().position.y);
