@@ -169,9 +169,9 @@ public class CameraTest extends LinearOpMode
         }
 
         /* Actually do something useful */
-        if (tagOfInterest == null ||tagOfInterest.id == greenFirst) {
+        if (tagOfInterest == null ||tagOfInterest.id == 20) {
             // greenFirst code
-        } else if (tagOfInterest.id == greenMiddle) {
+        } else if (tagOfInterest.id == 24) {
             // greenMiddle code
         } else if (tagOfInterest.id == greenLast) {
             // greenLast code
