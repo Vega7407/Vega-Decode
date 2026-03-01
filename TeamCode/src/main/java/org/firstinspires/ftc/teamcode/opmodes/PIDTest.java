@@ -1,37 +1,28 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import android.service.controls.Control;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 import dev.nextftc.control.ControlSystem;
-import dev.nextftc.control.KineticState;
 import dev.nextftc.control.feedback.PIDCoefficients;
-import dev.nextftc.control.feedback.PIDController;
-import dev.nextftc.hardware.impl.MotorEx;
-
-import dev.nextftc.control.ControlSystem;
-import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.hardware.controllable.RunToVelocity;
 import dev.nextftc.hardware.impl.MotorEx;
 
 
 @TeleOp
 @Config
-public class MainTeleOp extends OpMode {
+public class PIDTest extends OpMode {
     MecanumDrive drive;
     DcMotorImplEx intakeMotor;
     DcMotorImplEx outtakeMotor;
@@ -45,11 +36,13 @@ public class MainTeleOp extends OpMode {
     double output;
     boolean adjustable;
     public static int target;
-    public static PIDCoefficients pidCoefficients = new PIDCoefficients(0.01, 0.01, 0.01);
-    public static double kS, kV, kA;
+    double currTargetVelocity;
+    public static PIDFCoefficients pidCoefficients = new PIDFCoefficients(0.01, 0.01, 0.01, 0.01);
+    public static double kS, kV, kA, kF;
 
     @Override
     public void init() {
+        currTargetVelocity = 500;
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         intakeMotor = hardwareMap.get(DcMotorImplEx.class, "intakeMotor");
         outtakeMotor = hardwareMap.get(DcMotorImplEx.class, "outtakeMotor");
@@ -61,15 +54,9 @@ public class MainTeleOp extends OpMode {
         adjustable = false;
         output = 0;
 
-
         servoDirection = false;
         motorPower = .5;
-
-        controller = ControlSystem.builder()
-                .velPid(pidCoefficients)
-                .basicFF(kV)
-                .build();
-
+        outtakeMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidCoefficients);
     }
 
     @Override
@@ -105,7 +92,7 @@ public class MainTeleOp extends OpMode {
                 if (farOrClose) {
                     outtakeMotor.setPower(.8);
                 } else {
-                    outtakeMotor.setPower(.7);
+                    outtakeMotor.setPower(.67);
                 }
             } else {
                 outtakeMotor.setPower(0);
@@ -144,26 +131,18 @@ public class MainTeleOp extends OpMode {
             intakeMotor.setPower(0);
         }
 
-        if(gamepad1.left_bumper)
-        {
-            intakeMotor.setPower(.8);
-            servo1.setPower(-.3);
-
-        } else if(gamepad1.left_trigger<.1 && !gamepad1.cross && !gamepad1.square)
-        {
-            intakeMotor.setPower(0.0);
-            servo1.setPower(0.0);
-        }
-
-
-
         double y = -gamepad1.left_stick_y ; // negate to make outtake front
         double x = -gamepad1.left_stick_x; // negate to make outtake front
         double rx = -gamepad1.right_stick_x;
 
+        outtakeMotor.setVelocity(currTargetVelocity);
+        double currVelocity = outtakeMotor.getVelocity();
+        double error = currTargetVelocity - currVelocity;
+
         drive.setDrivePowers(new PoseVelocity2d(new Vector2d(y, x), rx));
         drive.updatePoseEstimate();
 
+        telemetry.addData("This robot died.", error);
         telemetry.addLine("LOCALIZATION");
         telemetry.addData("X Position", drive.getPose().position.x);
         telemetry.addData("Y Position", drive.getPose().position.y);

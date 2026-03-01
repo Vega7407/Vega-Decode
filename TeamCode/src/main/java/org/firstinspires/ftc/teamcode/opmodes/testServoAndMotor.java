@@ -14,7 +14,7 @@ import dev.nextftc.hardware.impl.MotorEx;
 @TeleOp
 public class testServoAndMotor extends OpMode {
     DcMotorImplEx motor1;
-    ServoImplEx servo1;
+//    ServoImplEx servo1;
     boolean motorOn;
     boolean servoOn;
     boolean servoDirection;
@@ -22,10 +22,11 @@ public class testServoAndMotor extends OpMode {
     @Override
     public void init() {
         motor1 = hardwareMap.get(DcMotorImplEx.class, "motor1");
-        servo1 = hardwareMap.get(ServoImplEx.class, "servo1");
+//        servo1 = hardwareMap.get(ServoImplEx.class, "servo1");
         motorOn = false;
         servoOn = false;
-        servoDirection = false;
+        motor1.setDirection(DcMotorImplEx.Direction.REVERSE);
+//        servoDirection = false;
     }
 
     @Override
@@ -39,14 +40,14 @@ public class testServoAndMotor extends OpMode {
             motorOn = !motorOn;
         }
 
-        if (gamepad1.b) {
-            if (servoOn) {
-                servo1.setPosition(0);
-            } else {
-                servo1.setPosition(1);
-            }
-            servoOn = !servoOn;
-        }
+//        if (gamepad1.b) {
+//            if (servoOn) {
+//                servo1.setPosition(0);
+//            } else {
+//                servo1.setPosition(1);
+//            }
+//            servoOn = !servoOn;
+//        }
 
         if (gamepad1.x) {
             if (motor1.getDirection() == DcMotorSimple.Direction.FORWARD){
@@ -56,17 +57,17 @@ public class testServoAndMotor extends OpMode {
             }
         }
 
-        if (gamepad1.y) {
-            if (servo1.getDirection() == ServoImplEx.Direction.FORWARD){
-                servo1.setDirection(ServoImplEx.Direction.REVERSE);
-            } else {
-                servo1. setDirection(ServoImplEx.Direction.FORWARD);
-            }
-        }
+//        if (gamepad1.y) {
+//            if (servo1.getDirection() == ServoImplEx.Direction.FORWARD){
+//                servo1.setDirection(ServoImplEx.Direction.REVERSE);
+//            } else {
+//                servo1. setDirection(ServoImplEx.Direction.FORWARD);
+//            }
+//        }
 
         telemetry.addData("Motor Direction", motor1.getDirection());
         telemetry.addData("Motor Velocity", motor1.getVelocity());
-        telemetry.addData("Servo Power", servo1.getDirection());
+//        telemetry.addData("Servo Power", servo1.getDirection());
         telemetry.update();
     }
 }

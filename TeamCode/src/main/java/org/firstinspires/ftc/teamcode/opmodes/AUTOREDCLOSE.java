@@ -1,38 +1,26 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.Trajectory;
-import com.acmerobotics.roadrunner.ftc.Actions;
-import com.pedropathing.geometry.BezierCurve;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.CRServoImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import org.firstinspires.ftc.teamcode.opmodes.pedroPathing.Constants;
-
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServoImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.opmodes.pedroPathing.Constants;
 
 
 @Autonomous
 @Config
-public class Auton extends OpMode {
+public class AUTOREDCLOSE extends OpMode {
     private Follower follower;
     private ElapsedTime waitTimer = new ElapsedTime();
 
@@ -42,7 +30,7 @@ public class Auton extends OpMode {
     DcMotorImplEx outtakeMotor;
     CRServoImplEx servo1;
     private final Pose startPose = new Pose(123, 123, Math.toRadians(40)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(80, 100, Math.toRadians(40)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose scorePose = new Pose(90, 90, Math.toRadians(40)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     private final Pose leavePose = new Pose (88, 30, Math.toRadians(90));
     private final Pose pickup1Pose = new Pose(37, 121, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
     private final Pose pickup2Pose = new Pose(43, 130, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.

@@ -1,42 +1,43 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import android.service.controls.Control;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 import dev.nextftc.control.ControlSystem;
-import dev.nextftc.control.KineticState;
 import dev.nextftc.control.feedback.PIDCoefficients;
-import dev.nextftc.control.feedback.PIDController;
-import dev.nextftc.hardware.impl.MotorEx;
-
-import dev.nextftc.control.ControlSystem;
-import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.hardware.controllable.RunToVelocity;
 import dev.nextftc.hardware.impl.MotorEx;
 
 
 @TeleOp
 @Config
-public class MainTeleOp extends OpMode {
+public class RegionalTeleOp extends OpMode {
     MecanumDrive drive;
-    DcMotorImplEx intakeMotor;
-    DcMotorImplEx outtakeMotor;
-    MotorEx outtakeMotorEx;
-    CRServoImplEx servo1;
+    DcMotorImplEx outtakeMotor1;
+    MotorEx outtakeMotor1Ex;
+
+    DcMotorImplEx outtakeMotor2;
+
+    MotorEx outtakeMotor2Ex;
+
+
+    DcMotorImplEx parkMotor1;
+
+    MotorEx parkMotor1Ex;
+
+    DcMotorImplEx parkMotor2;
+
+    MotorEx parkMotor2Ex;
+
+
+    Servo servo1;
     ControlSystem controller;
     boolean farOrClose;
     double motorPower;
@@ -51,12 +52,17 @@ public class MainTeleOp extends OpMode {
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-        intakeMotor = hardwareMap.get(DcMotorImplEx.class, "intakeMotor");
-        outtakeMotor = hardwareMap.get(DcMotorImplEx.class, "outtakeMotor");
-        outtakeMotorEx = new MotorEx(outtakeMotor);
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        outtakeMotor1 = hardwareMap.get(DcMotorImplEx.class, "outtakeMotor1");
+        outtakeMotor1Ex = new MotorEx(outtakeMotor1);
+        outtakeMotor2 = hardwareMap.get(DcMotorImplEx.class,"outtakeMotor2");
+        outtakeMotor2Ex = new MotorEx(outtakeMotor2);
+        parkMotor1 = hardwareMap.get(DcMotorImplEx.class, "park1");
+        parkMotor1Ex = new MotorEx(parkMotor1);
+        parkMotor2 = hardwareMap.get(DcMotorImplEx.class, "park2");
+        parkMotor2Ex = new MotorEx(parkMotor2);
+
         farOrClose = true; // true is far, false is close
-        servo1 = hardwareMap.get(CRServoImplEx.class, "servo1");
+        servo1 = hardwareMap.get(Servo.class, "servo1");
         servoOn = false;
         adjustable = false;
         output = 0;
@@ -78,9 +84,9 @@ public class MainTeleOp extends OpMode {
 //        if (gamepad1.dpad_left) {
 //            adjustable = !adjustable;
 //        }
-        if (outtakeMotor.getVelocity() >= 1600 && farOrClose) {
+        if (outtakeMotor1.getVelocity() >= 1600 && farOrClose) {
             gamepad1.rumble(200);
-        } else if (outtakeMotor.getVelocity() >= 1200) {
+        } else if (outtakeMotor1.getVelocity() >= 1200) {
             gamepad1.rumble( 200);
         }
 //        if (adjustable) {
@@ -101,19 +107,22 @@ public class MainTeleOp extends OpMode {
 //                }
 //            }
 //        } else {
-            if (gamepad1.right_trigger > 0.1) {
-                if (farOrClose) {
-                    outtakeMotor.setPower(.8);
-                } else {
-                    outtakeMotor.setPower(.7);
-                }
+        if (gamepad1.right_trigger > 0.1) {
+            if (farOrClose) {
+                outtakeMotor1.setPower(.95);
+                outtakeMotor2.setPower(-.95);
             } else {
-                outtakeMotor.setPower(0);
+                outtakeMotor1.setPower(.67);
+                outtakeMotor2.setPower(-.67);
             }
+        } else {
+            outtakeMotor1.setPower(0);
+            outtakeMotor2.setPower(0);
+        }
 //        }
 //
 //        if (gamepad1.options) {
-//            adjustable = !adjustable;
+//            adjustable = !adjustable;adb
 //        }
 
         if (gamepad1.dpad_up) {
@@ -123,39 +132,13 @@ public class MainTeleOp extends OpMode {
         }
 
         if (gamepad1.a) {
-            servo1.setPower(-.5);
+            servo1.setPosition(.5);
         }
 
+        if (gamepad1.b) {
+            servo1.setPosition(1);
 
-        if (gamepad1.xWasPressed()) {
-                servo1.setPower(.75);
         }
-        else if (gamepad1.xWasReleased())
-        {
-            servo1.setPower(0);
-        }
-
-
-        if (gamepad1.left_trigger > 0.1) {
-            intakeMotor.setPower(.85);
-        } else if (gamepad1.b){
-            intakeMotor.setPower(-.67);
-        } else {
-            intakeMotor.setPower(0);
-        }
-
-        if(gamepad1.left_bumper)
-        {
-            intakeMotor.setPower(.8);
-            servo1.setPower(-.3);
-
-        } else if(gamepad1.left_trigger<.1 && !gamepad1.cross && !gamepad1.square)
-        {
-            intakeMotor.setPower(0.0);
-            servo1.setPower(0.0);
-        }
-
-
 
         double y = -gamepad1.left_stick_y ; // negate to make outtake front
         double x = -gamepad1.left_stick_x; // negate to make outtake front
@@ -169,13 +152,14 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Y Position", drive.getPose().position.y);
         telemetry.addData("Heading", drive.getPose().heading.toDouble());
         telemetry.addLine("MECHANISMS");
-        telemetry.addData("Outtake Motor Direction", outtakeMotor.getDirection());
-        telemetry.addData("Outtake Motor Power", outtakeMotor.getPower());
-        telemetry.addData("Outtake Motor Velocity", outtakeMotor.getVelocity());
+        telemetry.addData("Outtake Motor Direction", outtakeMotor1.getDirection());
+        telemetry.addData("Outtake Motor Power", outtakeMotor1.getPower());
+        telemetry.addData("Outtake Motor Velocity", outtakeMotor1.getVelocity());
         telemetry.addLine("Toggles");
         telemetry.addData("Mode", adjustable ? "Adjustable Mode" : "Standard Mode");
         telemetry.addData("Location", farOrClose ? "Far Mode" : "Close Mode");
         telemetry.addData("Servo : ", servoOn ? "On" : "Off");
+
         telemetry.update();
     }
 }
